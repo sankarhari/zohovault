@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="outputContent"></div>
+    <script type="module" src="Crypto.js"></script>
+    <script type="module">
+      import { vaultencode, vaultdecode } from "./Crypto.js";
+      //   main(); // Call the main function
+      function updateContent(output) {
+        let outputContent = document.getElementById("outputContent");
+        outputContent.innerText = output;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const method = params.get("method");
+      const isshared = params.get("isshared");
+      const data = params.get("data");
+      const salt = params.get("salt");
+      const iterations = params.get("iterations");
+      const masterPassword = params.get("masterPassword");
+      console.log(data);
+
+      if (
+        method == "encrypt" &&
+        isshared == "no" &&
+        data != "" &&
+        data != null
+      ) {
+        let encodedValue = await vaultencode(
+          masterPassword,
+          salt,
+          iterations,
+          data
+        );
+        updateContent(encodedValue);
+      } else if (
+        method == "decrypt" &&
+        isshared == "no" &&
+        data != "" &&
+        data != null
+      ) {
+        let decodedValue = await vaultdecode(
+          masterPassword,
+          salt,
+          iterations,
+          data
+        );
+        updateContent(decodedValue);
+      } else {
+        updateContent("Invalid parameter");
+      }
+    </script>
+  </body>
+</html>
